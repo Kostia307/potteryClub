@@ -1,5 +1,6 @@
 package com.example.potteryclub.api;
 
+import com.example.potteryclub.AuthLoginResponse;
 import com.example.potteryclub.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.openapitools.model.AuthLoginPost200Response;
@@ -26,16 +27,11 @@ public class AuthController {
         userService.register(request.getEmail(), request.getPassword());
         return ResponseEntity.status(201).build();
     }
-
     @PostMapping("/auth/login")
-    public ResponseEntity<AuthLoginPost200Response> login(
+    public ResponseEntity<AuthLoginResponse> login(
             @RequestBody AuthRegisterPostRequest request
     ) {
-        String token = userService.login(request.getEmail(), request.getPassword());
-
-        AuthLoginPost200Response response = new AuthLoginPost200Response();
-        response.setToken(token);
-
+        AuthLoginResponse response = userService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(response);
     }
 }

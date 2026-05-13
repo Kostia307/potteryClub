@@ -1,9 +1,12 @@
 package com.example.potteryclub.service;
 
+import com.example.potteryclub.AuthLoginResponse;
 import com.example.potteryclub.model.UserEntity;
 import com.example.potteryclub.repository.UserRepository;
 import com.example.potteryclub.security.JwtUtil;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -28,8 +31,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String login(String email, String password) {
-
+    public AuthLoginResponse login(String email, String password) {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -37,6 +39,7 @@ public class UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return JwtUtil.generateToken(user.getEmail());
+        String token = JwtUtil.generateToken(user.getEmail());
+        return new AuthLoginResponse(token, user.getId(), user.isAdmin());
     }
 }

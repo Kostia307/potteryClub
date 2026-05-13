@@ -28,8 +28,7 @@ public class PostService {
                 .toList();
     }
 
-    public void createPost(Post dto) {
-
+    public Post createPost(Post dto) {
         UserEntity user = userRepository.findById(dto.getUserId().longValue())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -38,23 +37,19 @@ public class PostService {
         entity.setContent(dto.getContent());
         entity.setUser(user);
 
-        postRepository.save(entity);
+        PostEntity saved = postRepository.save(entity);
+        return toDto(saved); // return the saved entity with its generated id
     }
 
     // UPDATE POST
-    public void updatePost(Long id, Post dto) {
-
+    public Post updatePost(Long id, Post dto) {
         PostEntity entity = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        if (dto.getTitle() != null) {
-            entity.setTitle(dto.getTitle());
-        }
-        if (dto.getContent() != null) {
-            entity.setContent(dto.getContent());
-        }
+        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
+        if (dto.getContent() != null) entity.setContent(dto.getContent());
 
-        postRepository.save(entity);
+        return toDto(postRepository.save(entity));
     }
 
     public void deletePost(Long id) {

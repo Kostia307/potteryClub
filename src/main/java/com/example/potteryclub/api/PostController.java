@@ -26,19 +26,16 @@ public class PostController {
 
     // POST /posts
     @PostMapping("/posts")
-    public ResponseEntity<Void> createPost(@RequestBody Post post) {
-        postService.createPost(post);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        Post created = postService.createPost(post);
+        return ResponseEntity.status(201).body(created);
     }
 
     // PUT /posts/{id}
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Void> updatePost(
-            @PathVariable Integer id,
-            @RequestBody Post post
-    ) {
-        postService.updatePost(id.longValue(), post);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Post> updatePost(@PathVariable Integer id, @RequestBody Post post) {
+        Post updated = postService.updatePost(id.longValue(), post);
+        return ResponseEntity.ok(updated);
     }
 
     // DELETE /posts/{id}
